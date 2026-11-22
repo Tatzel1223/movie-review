@@ -1,0 +1,62 @@
+<header class="topo">
+  <div class="container topo-conteudo">
+    <a routerLink="/inicio" class="marca">
+      <span class="marca-icone">MR</span>
+      <span>Movie Review</span>
+    </a>
+
+    <nav class="menu">
+      <a routerLink="/perfil" routerLinkActive="ativo">Perfil</a>
+      <a routerLink="/inicio" routerLinkActive="ativo">Início</a>
+      <a routerLink="/filmes" routerLinkActive="ativo">Filmes</a>
+      <a routerLink="/series" routerLinkActive="ativo">Séries</a>
+    </nav>
+
+    <div class="topo-acoes">
+      @if (buscaAberta) {
+        <form class="busca-topo" (ngSubmit)="buscar()">
+          <input type="search" name="termo" placeholder="Buscar filmes e séries" [(ngModel)]="termo" autofocus />
+        </form>
+      }
+      <button type="button" class="botao-quadrado" aria-label="Buscar" (click)="alternarBusca()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+
+      <div class="menu-usuario">
+        @if (usuarioService.usuario(); as u) {
+          <button type="button" class="avatar avatar-pequeno" aria-label="Menu da conta" (click)="menuAberto = !menuAberto">
+            {{ iniciaisUsuario() }}
+          </button>
+
+          @if (menuAberto) {
+            <div class="fundo-invisivel" (click)="menuAberto = false"></div>
+            <div class="cartao dropdown">
+              <div class="dropdown-cabecalho">
+                <span class="avatar avatar-mini">{{ iniciaisUsuario() }}</span>
+                <div>
+                  <strong>{{ u.nome }}</strong>
+                  <span class="meta">&#64;{{ u.login }}</span>
+                </div>
+              </div>
+              <div class="dropdown-divisor"></div>
+              <a routerLink="/perfil" class="dropdown-item" (click)="menuAberto = false">Meu perfil</a>
+              <a routerLink="/resenhas/nova" class="dropdown-item" (click)="menuAberto = false">Escrever resenha</a>
+              <a routerLink="/usuarios/novo" class="dropdown-item" (click)="menuAberto = false">Criar outra conta</a>
+              <div class="dropdown-divisor"></div>
+              <button type="button" class="dropdown-item perigo" (click)="sair()">Sair</button>
+            </div>
+          }
+        } @else {
+          <a routerLink="/entrar" class="botao botao-pequeno">Entrar</a>
+        }
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container conteudo">
+  <router-outlet />
+</main>

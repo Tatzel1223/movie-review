@@ -1,0 +1,51 @@
+<section>
+  <h1 class="titulo-pagina">Filmes para você!</h1>
+  <p class="subtitulo">Descubra sua próxima sessão e compartilhe seu olhar sobre o cinema.</p>
+
+  @if (erro) {
+    <div class="alerta erro">{{ erro }}</div>
+  }
+
+  <div class="grade-titulos">
+    @for (filme of filmes; track filme.id) {
+      <app-titulo-card [titulo]="filme" />
+    }
+  </div>
+
+  <div class="ver-mais">
+    <a routerLink="/filmes" class="link-suave">Ver todos os filmes →</a>
+  </div>
+</section>
+
+<section class="secao">
+  <h2 class="titulo-secao">Resenhas mais curtidas</h2>
+  <p class="subtitulo">O que a comunidade está destacando agora, com destaques por gênero e resumos rápidos.</p>
+
+  <div class="grade-resenhas">
+    @for (r of resenhas; track r.id) {
+      <article class="cartao resenha-card">
+        <div class="faixa" [style.background]="gradiente(r.genero)">
+          @if (r.imagem) {
+            <img class="poster-imagem" [src]="r.imagem" [alt]="r.titulo" />
+          }
+          <span class="pilula-genero">{{ r.genero }}</span>
+        </div>
+        <div class="resenha-corpo">
+          <h3>{{ r.titulo }}</h3>
+          <p class="meta">Por {{ r.autor }} • {{ curtidas(r.curtidas) }} curtidas</p>
+          <p class="resenha-manchete">“{{ r.manchete }}”</p>
+          <p class="trecho">{{ r.texto }}</p>
+          <button
+            type="button"
+            class="botao-curtir"
+            [class.curtido]="jaCurtiu(r.id)"
+            [disabled]="jaCurtiu(r.id)"
+            (click)="curtir(r)"
+          >
+            {{ jaCurtiu(r.id) ? 'Curtido' : 'Curtir' }}
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+</section>

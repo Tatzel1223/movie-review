@@ -1,0 +1,43 @@
+<article class="cartao titulo-card">
+  <div class="poster" [style.background]="gradiente(titulo.genero)">
+    @if (titulo.imagem && !imagemFalhou) {
+      <img class="poster-imagem" [src]="titulo.imagem" [alt]="titulo.nome" (error)="imagemFalhou = true" />
+    } @else {
+      <span class="poster-nome">{{ titulo.nome }}</span>
+    }
+    <span class="pilula-genero">{{ titulo.genero }}</span>
+  </div>
+
+  <div class="titulo-corpo">
+    <h3>{{ titulo.nome }}</h3>
+    <p class="meta">
+      {{ tipo(titulo.tipo) }} · {{ titulo.anoLancamento }}
+      @if (titulo.tipo === 'SERIE') {
+        · {{ titulo.temporadas }} temp.
+      }
+    </p>
+
+    <div class="avaliacao">
+      @if (titulo.media !== null) {
+        <span class="pilula-nota">{{ nota(titulo.media) }}/5</span>
+        <span class="meta">{{ curtidas(titulo.curtidas) }} curtidas</span>
+      } @else {
+        <span class="pilula-nota apagada">Sem nota</span>
+        <span class="meta">Nenhuma resenha ainda</span>
+      }
+    </div>
+
+    <p class="trecho">{{ titulo.sinopse }}</p>
+
+    <div class="card-acoes">
+      <a class="botao botao-pequeno" [href]="trailer(titulo.nome)" target="_blank" rel="noopener">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l15 8-15 8z"></path></svg>
+        Assista trailer
+      </a>
+      @if (gerenciar) {
+        <a class="botao botao-pequeno escuro" [routerLink]="['/titulos', titulo.id, 'editar']">Editar</a>
+        <button type="button" class="botao botao-pequeno contorno-perigo" (click)="excluir.emit(titulo)">Excluir</button>
+      }
+    </div>
+  </div>
+</article>

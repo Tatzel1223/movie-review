@@ -1,0 +1,139 @@
+<h1 class="titulo-pagina">Meu perfil</h1>
+<p class="subtitulo">Seu olhar sobre o cinema, reunido em um só lugar.</p>
+
+@if (erro) {
+  <div class="alerta erro">{{ erro }}</div>
+}
+
+<div class="perfil-layout">
+  <aside class="perfil-lateral">
+    <section class="cartao perfil-card">
+      @if (!editando) {
+        <div class="avatar avatar-grande">{{ inicial() }}</div>
+        <h2>{{ usuario()?.nome }}</h2>
+        <p class="meta login-perfil">&#64;{{ usuario()?.login }}</p>
+        <p class="meta">{{ usuario()?.frase }}</p>
+        <button type="button" class="botao botao-largo" (click)="abrirEdicao()">Editar perfil</button>
+      } @else {
+        <form class="formulario-perfil" #perfilForm="ngForm" (ngSubmit)="salvarPerfil()">
+          <label>
+            Nome
+            <input type="text" name="nome" [(ngModel)]="form.nome" required maxlength="80" />
+          </label>
+          <label>
+            Frase
+            <input type="text" name="frase" [(ngModel)]="form.frase" maxlength="120" />
+          </label>
+          <label>
+            Título da bio
+            <input type="text" name="bioTitulo" [(ngModel)]="form.bioTitulo" maxlength="120" />
+          </label>
+          <label>
+            Bio
+            <textarea name="bio" rows="4" [(ngModel)]="form.bio" maxlength="1000"></textarea>
+          </label>
+          <div class="form-acoes">
+            <button type="button" class="botao escuro" (click)="editando = false">Cancelar</button>
+            <button type="submit" class="botao" [disabled]="perfilForm.invalid">Salvar</button>
+          </div>
+          <button type="button" class="botao contorno-perigo botao-largo" (click)="excluirConta()">Excluir conta</button>
+        </form>
+      }
+    </section>
+
+    <section class="cartao estante">
+      <h2>Minha estante</h2>
+      <div class="estante-linha">
+        <span>Filmes vistos</span>
+        <strong>{{ estante ? estante.filmesVistos : '—' }}</strong>
+      </div>
+      <div class="estante-linha">
+        <span>Séries vistas</span>
+        <strong>{{ estante ? estante.seriesVistas : '—' }}</strong>
+      </div>
+      <div class="estante-linha">
+        <span>Resenhas publicadas</span>
+        <strong>{{ estante ? estante.resenhasPublicadas : '—' }}</strong>
+      </div>
+    </section>
+  </aside>
+
+  <div class="perfil-principal">
+    <section class="cartao bloco">
+      <h2>Bio</h2>
+      <p class="bio-titulo">{{ usuario()?.bioTitulo || 'Seu perfil também conta uma história.' }}</p>
+      <p class="meta">{{ usuario()?.bio || 'Clique em "Editar perfil" para escrever sua bio.' }}</p>
+    </section>
+
+    <section class="cartao bloco">
+      <h2>Filmes em rotação</h2>
+      <p class="meta">As histórias que estão acompanhando você agora.</p>
+
+      @if (rotacao.length === 0) {
+        <div class="caixa-interna caixa-vazia">
+          <span class="icone-mais">+</span>
+          <h3>Sua próxima sessão começa aqui</h3>
+          <p class="meta">Adicione filmes à sua rotação para deixar seu perfil com a sua cara.</p>
+          <a routerLink="/titulos/novo" class="botao">Adicionar filmes</a>
+        </div>
+      } @else {
+        <div class="rotacao">
+          @for (t of rotacao; track t.id) {
+            <a class="rotacao-item" [routerLink]="['/resenhas/nova']" [queryParams]="{ titulo: t.id }">
+              <div class="mini-poster" [style.background]="gradiente(t.genero.nome)">
+                @if (t.imagem) {
+                  <img class="poster-imagem" [src]="t.imagem" [alt]="t.nome" />
+                } @else {
+                  <span>{{ t.nome }}</span>
+                }
+              </div>
+              <strong>{{ t.nome }}</strong>
+              <span class="meta">{{ tipo(t.tipo) }} · {{ t.genero.nome }}</span>
+            </a>
+          }
+          <a routerLink="/titulos/novo" class="rotacao-adicionar">
+            <span class="icone-mais">+</span>
+            Adicionar filmes
+          </a>
+        </div>
+      }
+    </section>
+
+    <section class="cartao bloco">
+      <div class="bloco-topo">
+        <div>
+          <h2>Minhas resenhas</h2>
+          <p class="meta">Escreva, revise e organize suas opiniões sobre cada filme.</p>
+        </div>
+        <a routerLink="/resenhas/nova" class="botao">Escrever resenha</a>
+      </div>
+
+      @for (r of resenhas; track r.id) {
+        <article class="caixa-interna resenha-item">
+          <p class="rotulo">{{ tipo(r.tipo) }} · {{ curtidas(r.curtidas) }} curtidas</p>
+          <div class="resenha-linha">
+            <div>
+              <h3>{{ r.titulo }}</h3>
+              <p class="meta">{{ r.genero }} · Resenha publicada</p>
+            </div>
+            <span class="pilula-nota grande">{{ r.nota }} / 5</span>
+          </div>
+          <h4>{{ r.manchete }}</h4>
+          <p class="texto-resenha">{{ r.texto }}</p>
+          <div class="resenha-rodape">
+            <span class="meta">Gerencie cada resenha individualmente.</span>
+            <div class="botoes">
+              <a [routerLink]="['/resenhas', r.id, 'editar']" class="botao escuro">Editar</a>
+              <button type="button" class="botao contorno-perigo" (click)="excluirResenha(r)">Excluir</button>
+            </div>
+          </div>
+        </article>
+      } @empty {
+        <div class="caixa-interna caixa-vazia">
+          <h3>Nenhuma resenha ainda</h3>
+          <p class="meta">Escreva sua primeira resenha e ela aparece aqui.</p>
+        </div>
+      }
+    </section>
+  </div>
+</div>

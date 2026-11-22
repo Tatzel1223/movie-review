@@ -1,0 +1,45 @@
+<h1 class="titulo-pagina">{{ id ? 'Editar resenha' : 'Escrever resenha' }}</h1>
+<p class="subtitulo">Conte o que achou e dê sua nota de 1 a 5.</p>
+
+@if (erro) {
+  <div class="alerta erro">{{ erro }}</div>
+}
+
+<form class="cartao formulario formulario-estreito" #form="ngForm" (ngSubmit)="salvar()">
+  <label>
+    Filme ou série
+    <select name="tituloId" [(ngModel)]="dados.tituloId" required>
+      <option [ngValue]="null" disabled>Escolha...</option>
+      @for (t of titulos; track t.id) {
+        <option [ngValue]="t.id">{{ t.nome }} ({{ tipo(t.tipo) }})</option>
+      }
+    </select>
+  </label>
+
+  <div class="campo">
+    <span>Nota</span>
+    <div class="estrelas">
+      @for (n of estrelas; track n) {
+        <button type="button" class="estrela" [class.ativa]="n <= dados.nota" (click)="escolherNota(n)" [attr.aria-label]="n + ' de 5'">★</button>
+      }
+      <span class="pilula-nota">{{ dados.nota }} / 5</span>
+    </div>
+  </div>
+
+  <label>
+    Título da resenha
+    <input type="text" name="manchete" [(ngModel)]="dados.manchete" required maxlength="120" placeholder="Ex.: Um clássico que continua marcante" />
+  </label>
+
+  <label>
+    Sua resenha
+    <textarea name="texto" rows="6" [(ngModel)]="dados.texto" required maxlength="2000" placeholder="O que você achou?"></textarea>
+  </label>
+
+  <div class="form-acoes">
+    <a routerLink="/perfil" class="botao escuro">Cancelar</a>
+    <button type="submit" class="botao" [disabled]="form.invalid || salvando">
+      {{ salvando ? 'Salvando...' : id ? 'Salvar alterações' : 'Publicar resenha' }}
+    </button>
+  </div>
+</form>

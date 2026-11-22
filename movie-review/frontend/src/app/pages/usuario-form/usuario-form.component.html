@@ -1,0 +1,94 @@
+<h1 class="titulo-pagina">Criar conta</h1>
+<p class="subtitulo">Monte seu perfil para guardar sua estante e publicar suas resenhas.</p>
+
+@if (erro) {
+  <div class="alerta erro">{{ erro }}</div>
+}
+
+<div class="layout-form">
+  <form class="cartao formulario" #form="ngForm" (ngSubmit)="salvar()">
+    <h2 class="titulo-grupo">Acesso</h2>
+    <div class="linha">
+      <label>
+        Nome
+        <input type="text" name="nome" [(ngModel)]="dados.nome" required maxlength="80" placeholder="Como você quer ser chamado" />
+      </label>
+      <label>
+        Nome de usuário
+        <input
+          type="text"
+          name="login"
+          [(ngModel)]="dados.login"
+          required
+          minlength="3"
+          maxlength="30"
+          pattern="[a-zA-Z0-9._]+"
+          autocomplete="username"
+          placeholder="Ex.: joao.silva"
+        />
+      </label>
+    </div>
+    <div class="linha">
+      <label>
+        Senha
+        <div class="campo-senha">
+          <input
+            [type]="mostrarSenha ? 'text' : 'password'"
+            name="senha"
+            [(ngModel)]="dados.senha"
+            required
+            minlength="6"
+            maxlength="60"
+            autocomplete="new-password"
+            placeholder="Mínimo de 6 caracteres"
+          />
+          <button type="button" class="ver-senha" (click)="mostrarSenha = !mostrarSenha">
+            {{ mostrarSenha ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+      </label>
+      <label>
+        Confirmar senha
+        <input
+          [type]="mostrarSenha ? 'text' : 'password'"
+          name="confirmacao"
+          [(ngModel)]="confirmacao"
+          required
+          autocomplete="new-password"
+          placeholder="Repita a senha"
+        />
+      </label>
+    </div>
+    @if (senhasDiferentes) {
+      <span class="aviso-campo">As senhas não conferem.</span>
+    }
+
+    <h2 class="titulo-grupo">Perfil</h2>
+    <label>
+      Frase do perfil
+      <input type="text" name="frase" [(ngModel)]="dados.frase" maxlength="120" placeholder="Ex.: Meu espaço de cinema" />
+    </label>
+    <label>
+      Título da bio
+      <input type="text" name="bioTitulo" [(ngModel)]="dados.bioTitulo" maxlength="120" placeholder="Ex.: Fã de ficção científica desde criança" />
+    </label>
+    <label>
+      Bio
+      <textarea name="bio" rows="4" [(ngModel)]="dados.bio" maxlength="1000" placeholder="Conte um pouco sobre você e seus filmes favoritos"></textarea>
+    </label>
+
+    <div class="form-acoes">
+      <a routerLink="/entrar" class="botao escuro">Já tenho conta</a>
+      <button type="submit" class="botao" [disabled]="form.invalid || senhasDiferentes || salvando">
+        {{ salvando ? 'Criando...' : 'Criar conta' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="cartao perfil-card">
+    <div class="avatar avatar-grande">{{ iniciais(dados.nome).charAt(0) || '?' }}</div>
+    <h2>{{ dados.nome || 'Seu nome' }}</h2>
+    <p class="meta">&#64;{{ dados.login || 'usuario' }}</p>
+    <p class="meta">{{ dados.frase || 'Sua frase aparece aqui' }}</p>
+  </div>
+</div>

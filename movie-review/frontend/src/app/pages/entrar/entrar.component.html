@@ -1,0 +1,41 @@
+<div class="auth">
+  <div class="cartao auth-card">
+    <span class="marca-icone marca-grande">MR</span>
+    <h1>Entrar</h1>
+    <p class="meta">Acesse sua conta para escrever resenhas e montar sua estante.</p>
+
+    @if (erro) {
+      <div class="alerta erro">{{ erro }}</div>
+    }
+
+    <form class="auth-form" #form="ngForm" (ngSubmit)="entrar()">
+      <label>
+        Nome de usuário
+        <input type="text" name="login" [(ngModel)]="dados.login" required autocomplete="username" />
+      </label>
+      <label>
+        Senha
+        <div class="campo-senha">
+          <input
+            [type]="mostrarSenha ? 'text' : 'password'"
+            name="senha"
+            [(ngModel)]="dados.senha"
+            required
+            autocomplete="current-password"
+          />
+          <button type="button" class="ver-senha" (click)="mostrarSenha = !mostrarSenha">
+            {{ mostrarSenha ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+      </label>
+      <button type="submit" class="botao botao-largo" [disabled]="form.invalid || entrando">
+        {{ entrando ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p class="meta auth-rodape">
+      Ainda não tem conta?
+      <a routerLink="/usuarios/novo" class="link-verde">Criar conta</a>
+    </p>
+  </div>
+</div>

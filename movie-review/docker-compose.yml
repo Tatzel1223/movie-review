@@ -1,0 +1,11 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: movie-review-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: movie_review
+      MYSQL_USER: movie_review_app
+      MYSQL_PASSWORD: MovieReview@2026
+    ports:
+      - "3306:3306"

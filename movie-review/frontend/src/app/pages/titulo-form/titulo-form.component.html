@@ -1,0 +1,98 @@
+<h1 class="titulo-pagina">{{ id ? 'Editar título' : dados.tipo === 'SERIE' ? 'Nova série' : 'Novo filme' }}</h1>
+<p class="subtitulo">Preencha as informações e veja a prévia do card ao lado.</p>
+
+@if (erro) {
+  <div class="alerta erro">{{ erro }}</div>
+}
+
+<div class="layout-form">
+  <form class="cartao formulario" #form="ngForm" (ngSubmit)="salvar()">
+    <label>
+      Nome
+      <input type="text" name="nome" [(ngModel)]="dados.nome" required maxlength="150" placeholder="Ex.: Interestelar" />
+    </label>
+
+    <div class="linha">
+      <label>
+        Tipo
+        <select name="tipo" [(ngModel)]="dados.tipo" required>
+          <option value="FILME">Filme</option>
+          <option value="SERIE">Série</option>
+        </select>
+      </label>
+      <label>
+        Gênero
+        <select name="generoId" [(ngModel)]="dados.generoId" required>
+          <option [ngValue]="null" disabled>Escolha...</option>
+          @for (g of generos; track g.id) {
+            <option [ngValue]="g.id">{{ g.nome }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="linha">
+      <label>
+        Ano de lançamento
+        <input type="number" name="anoLancamento" [(ngModel)]="dados.anoLancamento" required min="1888" max="2100" />
+      </label>
+      @if (dados.tipo === 'SERIE') {
+        <label>
+          Temporadas
+          <input type="number" name="temporadas" [(ngModel)]="dados.temporadas" required min="1" />
+        </label>
+      }
+    </div>
+
+    <div class="campo">
+      <span>Imagem (pôster)</span>
+      <div class="imagem-opcoes">
+        <input
+          type="url"
+          name="imagemUrl"
+          [(ngModel)]="imagemUrl"
+          (ngModelChange)="usarUrl($event)"
+          placeholder="Cole o link de uma imagem (https://...)"
+        />
+        <button type="button" class="botao escuro" (click)="arquivo.click()">Enviar do computador</button>
+        <input #arquivo type="file" accept="image/*" class="escondido" (change)="escolherArquivo($event)" />
+      </div>
+      @if (dados.imagem) {
+        <div class="imagem-status">
+          <span class="meta">{{ imagemDoComputador ? 'Imagem enviada do computador' : 'Usando a imagem do link' }}</span>
+          <button type="button" class="link-perigo" (click)="removerImagem()">Remover imagem</button>
+        </div>
+      }
+    </div>
+
+    <label>
+      Sinopse
+      <textarea name="sinopse" rows="4" [(ngModel)]="dados.sinopse" maxlength="1000" placeholder="Conte em poucas linhas do que se trata"></textarea>
+    </label>
+
+    <div class="form-acoes">
+      <a [routerLink]="rotaLista" class="botao escuro">Cancelar</a>
+      <button type="submit" class="botao" [disabled]="form.invalid || salvando">
+        {{ salvando ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="cartao previa">
+    <div class="poster" [style.background]="gradiente">
+      @if (dados.imagem) {
+        <img class="poster-imagem" [src]="dados.imagem" alt="Prévia do pôster" />
+      } @else {
+        <span class="poster-nome">{{ dados.nome || 'Nome do título' }}</span>
+      }
+      @if (nomeGenero) {
+        <span class="pilula-genero">{{ nomeGenero }}</span>
+      }
+    </div>
+    <div class="titulo-corpo">
+      <h3>{{ dados.nome || 'Nome do título' }}</h3>
+      <p class="meta">{{ dados.tipo === 'FILME' ? 'Filme' : 'Série' }} · {{ dados.anoLancamento || 'Ano' }}</p>
+      <p class="trecho">{{ dados.sinopse || 'A sinopse aparece aqui.' }}</p>
+    </div>
+  </div>
+</div>
