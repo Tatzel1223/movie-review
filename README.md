@@ -21,7 +21,6 @@ A aplicação tem como principal objetivo ser um espaço aonde as pessoas armaze
 - [ ] Listagem e busca de filmes
 - [ ] Criação, visualização, edição ou exclusão de resenhas
 - [ ] Avaliação / notas de filmes
-- [ ] [Adicione ou remova itens conforme o que realmente está implementado]
 
 ## 💻 Como Executar Localmente
 
