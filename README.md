@@ -5,7 +5,7 @@ Aplicação web colaborativa para consulta, avaliação e publicação de resenh
 ## 📋 Sobre o Projeto
 A aplicação tem como principal objetivo ser um espaço aonde as pessoas armazenam suas resenhas, o diferencial está que diferente de sites como letterboxd e outros que separam os filmes de séries em diferentes sites, o Movie Review tenta colocar todos no mesmo espaço.
 
-## 👥 Integrantes / Colaboradores
+## 👥 Integrantes
 - Francisco Javier Gomez Cervantes — RA: 273036
 - Álvaro Henrique de Moraes Cruz — RA: 273732
 - Guilherme dos Santos Alves — RA: 273305
